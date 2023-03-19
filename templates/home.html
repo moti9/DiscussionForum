@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+  Welcome to the DiscussionForum
+{% endblock title %}
+  
+
+{% block content %}
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-12 text-center">
+      <h1>Welcome to the Discussion Forum</h1>
+      <p class="lead">Join the conversation and share your thoughts</p>
+      <a href="discussion" class="btn btn-primary">Start a New Discussion</a>
+    </div>
+    <div class="col-12 my-2">
+      <h2 class="text-center">About Our Website</h2>
+      <p class="text-wrap">Welcome to our discussion forum website! Our goal is to provide a platform where people can come together to share their thoughts, ideas, and opinions on a variety of topics. Whether you're interested in politics, sports, entertainment, or anything in between, we've got you covered.</p>
+      <p class="text-wrap">Our website is designed to be easy to use and navigate, so you can quickly find the discussions that interest you. We believe in fostering a community where everyone's voice is heard, and we encourage respectful and constructive dialogue.</p>
+    </div>
+  </div>
+
+
+  
+  
+  {% if posts %}
+  <div class="container">
+    <div class="col-12">
+      <h2 class="text-center">Recent Posts</h2>
+      <ul class="list-group">
+        {% for post in posts %}
+        <li class="list-group-item">
+          <p class="text-wrap">
+            <a class="text-decoration-none" href="{{post.url}}">{{post.title}}</a>
+          </p>
+          <span>
+            Author- <a class="text-decoration-none" href="{% url 'discussion:userposts' post.author.id %}">{{ post.author.username }}</a>
+          </span>
+          <span>
+            Date- {{ post.pub_date_pretty }} 
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+  {% endif %}
+    
+
+<!-- Contact Section -->
+<section id="contact">
+    <div class="container d-flex flex-wrap justify-content-center flex-column my-4">
+      <div class="row center">
+        <div class="col-lg-12 text-center">
+          <h2>Contact Us</h2>
+          {% comment %} <hr class="divider"> {% endcomment %}
+        </div>
+        <div class="col-md-6 offset-md-3">
+          {% if messages %}
+          <div class="messages">
+              {% for message in messages %}
+              <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+              {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-8 mx-auto">
+          <form id="contact-form" method="POST" role="form">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit" class="btn btn-primary btn-block m-2">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</section>
+
+{% endblock content %}

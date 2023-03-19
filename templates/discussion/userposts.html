@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}   
+    All post by {{ author.username }}
+{% endblock title %}
+
+{% block content %}
+
+{% if posts %}
+<h1 class="text-center my-4"> All Posts By {{ author.username }} </h1>
+<div class="container d-flex justify-content-center flex-wrap my-4">
+    {% for post in posts %}
+    <div class="card m-4" style="width: 18rem;">
+      {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title}}">
+      {% else %}
+        <img src="..." class="card-img-top" alt="...">
+      {% endif %}
+      <div class="card-body text-center">
+        <a class="text-decoration-none" href="{{ post.url }}"><h6 class="card-title text-wrap"> {{ post.title|slice:"35" }} </h6></a>
+        <span>
+          <button class="btn btn-primary btn-sm" onClick="document.getElementById('upvote{{ post.id }}').submit()">🔺</button>
+          {{ post.votes }}
+          <button class="btn btn-secondary btn-sm" onClick="document.getElementById('downvote{{ post.id }}').submit()">🔻</button>
+        </span>
+        <p class="card-text text-wrap">{{post.description|slice:"60"}}</p>
+        
+        <span>
+          Author- <a class="text-decoration-none" href="{% url 'discussion:userposts' post.author.id %}">{{ post.author.username }}</a>
+        </span>
+        <span>
+          Date- {{ post.pub_date_pretty }} 
+        </span>
+       
+        <a href="{% url 'discussion:post' post.id %}" class="btn btn-primary">More</a>
+      </div>
+    </div>
+    <form id="upvote{{ post.id }}" method="post" action="{% url 'discussion:upvote' post.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}"/>
+    </form>
+    <form id="downvote{{ post.id }}" method="post" action="{% url 'discussion:downvote' post.id %}">
+     {% csrf_token %}
+     <input type="hidden" name="next" value="{{ request.path }}"/>
+    </form>
+    {% endfor %}
+    {% else %}
+    <div style="height: 22rem;">
+      <h1 class="text-center my-4">No post found</h1>
+    </div>
+    {% endif %}
+</div>
+
+<div class="container d-flex justify-content-center flex-wrap">
+  <nav class="mt-3">
+    <ul class="pagination">
+      {% if posts.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page=1&{{ params }}">First</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ posts.previous_page_number }}&{{ params }}">Previous</a></li>
+      {% endif %}
+      
+      <li class="page-item active"><a class="page-link" href="">{{ posts.number }}</a></li>
+      
+      {% if posts.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ posts.next_page_number }}&{{ params }}">Next</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ posts.paginator.num_pages }}&{{ params }}">Last</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+{% endblock %}

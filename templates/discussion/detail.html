@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}
+{% for post in post %}   
+    {{post.title}}
+{% endfor %}
+{% endblock title %}
+{% block content %}
+
+{% if post %}
+<div class="container d-flex justify-content-center flex-wrap my-4">
+    {% for post in post %}
+      {% if post.image %}
+            <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title}}" style="width: 18rem;">
+      {% else %}
+        <img src="..." class="card-img-top" alt="...">
+      {% endif %}
+      <div class="text-center">
+        <a class="text-decoration-none" href="{{ post.url }}"><h6 class="card-title text-wrap"> {{ post.title}} </h6></a>
+        <span>
+          <button class="btn btn-primary btn-sm" onClick="document.getElementById('upvote{{ post.id }}').submit()">🔺</button>
+          {{ post.votes }}
+          <button class="btn btn-secondary btn-sm" onClick="document.getElementById('downvote{{ post.id }}').submit()">🔻</button>
+        </span>
+        <p class="text-wrap">{{post.description}}</p>
+        
+        <span>
+          Author- <a class="text-decoration-none" href="{% url 'discussion:userposts' post.author.id %}">{{ post.author.username }}</a>
+        </span>
+        <span>
+          Date- {{ post.pub_date_pretty }} 
+        </span>
+      </div>
+    <form id="upvote{{ post.id }}" method="post" action="{% url 'discussion:upvote' post.id %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.path }}"/>
+    </form>
+    <form id="downvote{{ post.id }}" method="post" action="{% url 'discussion:downvote' post.id %}">
+     {% csrf_token %}
+     <input type="hidden" name="next" value="{{ request.path }}"/>
+    </form>
+    {% endfor %}
+    {% else %}
+    <div style="height: 22rem;">
+      <h1 class="text-center my-4">No post found</h1>
+    </div>
+    {% endif %}
+</div>  
+{% endblock content %}
+    

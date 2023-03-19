@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}   
+    Signup to DiscussionForum
+{% endblock title %}
+
+{% block content %}
+<div class="container d-flex flex-column justify-content-center my-4 flex-wrap">
+    <h3 class="text-center my-2">Signup to VotingApp</h3>
+    <div class="row center">
+        <div class="col-md-6 offset-md-3">
+            <p>Already have an account? <a href="{% url 'accounts:login' %}">Login Here</a></p>
+            {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
