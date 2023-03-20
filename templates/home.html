@@ -32,7 +32,7 @@
         {% for post in posts %}
         <li class="list-group-item">
           <p class="text-wrap">
-            <a class="text-decoration-none" href="{{post.url}}">{{post.title}}</a>
+            <a class="text-decoration-none" href="{{post.url}}" target="_blank">{{post.title|truncatewords:11}}</a>
           </p>
           <span>
             Author- <a class="text-decoration-none" href="{% url 'discussion:userposts' post.author.id %}">{{ post.author.username }}</a>

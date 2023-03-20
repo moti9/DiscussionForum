@@ -32,13 +32,13 @@ role="button"><i class="fas fa-poll"></i> Vote</a>
         <img src="..." class="card-img-top" alt="...">
       {% endif %}
       <div class="card-body text-center">
-        <a class="text-decoration-none" href="{{ post.url }}"><h6 class="card-title text-wrap"> {{ post.title|slice:"35" }} </h6></a>
+        <a class="text-decoration-none" href="{{ post.url }}" target="_blank"><h6 class="card-title text-wrap"> {{ post.title|truncatewords:11 }} </h6></a>
         <span>
           <button class="btn btn-primary btn-sm" onClick="document.getElementById('upvote{{ post.id }}').submit()">🔺</button>
           {{ post.votes }}
           <button class="btn btn-secondary btn-sm" onClick="document.getElementById('downvote{{ post.id }}').submit()">🔻</button>
         </span>
-        <p class="card-text text-wrap">{{post.description|slice:"60"}}</p>
+        <p class="card-text text-wrap">{{post.description|truncatewords:25}}</p>
         
         <span>
           Author- <a class="text-decoration-none" href="{% url 'discussion:userposts' post.author.id %}">{{ post.author.username }}</a>
